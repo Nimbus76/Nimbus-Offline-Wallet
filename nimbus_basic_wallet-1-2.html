@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Nimbus Offline Wallet</title>
+  </head>
+
+  <body>
+
+    <div id="sendTransaction">
+
+      <h1>Nimbus Offline Wallet</h1>
+      <form>
+        <fieldset>
+        <legend>Offline Create Send Transaction</legend>
+        <label for="receiverId">Send to address:</label><br>
+        <input type="text" id="receiverId" name="receiverId" value="" autofocus><br>
+        <label for="amount">Amount (LSK):</label><br>
+        <input type="number" id="amount" name="amount" value="" ><br>
+        <label for="data">Data:</label><br>
+        <input type="text" id="data" name="data" value=""><br>
+        <label for="secret">Passphrase:</label><br>
+        <input type="password" id="secret" name="secret" value="" ><br>
+        <label for="secondSecret">Second Passphrase:</label><br>
+        <input type="password" id="secondSecret" name="secondSecret" value=""><br>
+        <br>
+        <button type="button" id="createTransaction" onclick="startTransaction()">Create Transaction</button>
+        <h2>Transaction:</h2>
+        <p id="transaction"></p>
+        </fieldset>
+      </form>
+
+    </div>
+
+    <div id="broadcastTransaction">
+
+      <form class="" action="index.html" method="post"><br>
+        <fieldset>
+          <legend>Online Broadcast Transaction</legend>
+          <label for="transationBody">Transaction JSON</label><br>
+          <textarea id="transObject" name="transObject" rows="8" cols="80"></textarea><br>
+          <br>
+          Testnet<input type="radio" name="network" value="Testnet" Checked>
+          Mainnet<input type="radio" name="network" value="Mainnet"><br>
+          <br>
+          <button type="button" name="broadcastTransaction" onclick="broadcastTrans()">Broadcast</button><br>
+          <h2>Result:</h2><p id="transResult"></p>
+        </fieldset>
+
+      </form>
+
+    </div>
+  <script src="bignumber.js"></script>
+  <script src="lisk-elements.js"></script>
+
+  <script>
+
+  function startTransaction() {
+
+      const options = {
+
+          amount: lisk.transaction.utils.convertLSKToBeddows(document.getElementById("amount").value),
+          recipientId: document.getElementById("receiverId").value,
+          data: document.getElementById("data").value,
+          passphrase: document.getElementById("secret").value,
+          secondPassphrase: document.getElementById("secondSecret").value,
+        };
+
+      transaction = lisk.transaction.transfer(options);
+
+      document.getElementById("transaction").innerHTML = JSON.stringify(transaction, null);
+    }
+
+  function broadcastTrans() {
+
+    // Choose Network to Broadcast To
+    let LSKNetworks = document.getElementsByName("network");
+
+    let client;
+
+    if (LSKNetworks[0].checked){
+      client = lisk.APIClient.createTestnetAPIClient();
+      }
+    else {
+      // Note:  Mainnet Will Not Work Until Core 1.0 is release to Mainnet
+      client = lisk.APIClient.createMainnetAPIClient();
+      };
+    // Get Transaction Body & Parse to JSON Object
+    const transObject = JSON.parse(document.getElementById("transObject").value);
+
+    // Broadcast Transaction & Show Results
+    
+    client.transactions.broadcast(transObject).then(res => {
+      document.getElementById("transResult").innerHTML = JSON.stringify(res.data, null)});
+
+  };
+
+  </script>
+
+  </body>
+</html>
