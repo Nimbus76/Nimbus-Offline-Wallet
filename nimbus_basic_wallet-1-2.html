@@ -54,19 +54,24 @@
   <script src="lisk-elements.js"></script>
 
   <script>
+  function getElementValueById(idOfElement) {
+      return document.getElementById(idOfElement).value;
+  }
 
   function startTransaction() {
-      const options = {
+      let transactionObject = {
+          amount: lisk.transaction.utils.convertLSKToBeddows(getElementValueById("amount")),
+          recipientId: getElementValueById("receiverId"),
+          data: getElementValueById("data") === '' ?
+              null : getElementValueById("data"),
+          passphrase: getElementValueById("secret"),
+          secondPassphrase: getElementValueById("secondSecret") === '' ?
+              null : getElementValueById("secondSecret")
+      };
 
-          amount: lisk.transaction.utils.convertLSKToBeddows(document.getElementById("amount").value),
-          recipientId: document.getElementById("receiverId").value,
-          data: document.getElementById("data").value,
-          passphrase: document.getElementById("secret").value,
-          secondPassphrase: document.getElementById("secondSecret").value,
-        };
+      transaction = lisk.transaction.transfer(transactionObject);
 
-      transaction = lisk.transaction.transfer(options);
-
+      // Outputting result of lisk.transaction.transfer
       document.getElementById("transaction").innerHTML = JSON.stringify(transaction, null);
     }
 
@@ -83,7 +88,7 @@
     else {
       // Note:  Mainnet Will Not Work Until Core 1.0 is release to Mainnet
       client = lisk.APIClient.createMainnetAPIClient();
-      };
+      }
     // Get Transaction Body & Parse to JSON Object
     const transObject = JSON.parse(document.getElementById("transObject").value);
 
@@ -92,7 +97,7 @@
     client.transactions.broadcast(transObject).then(res => {
       document.getElementById("transResult").innerHTML = JSON.stringify(res.data, null)});
 
-  };
+  }
 
   </script>
 
