@@ -15,15 +15,21 @@
         <legend>Offline Create Send Transaction</legend>
         <label for="receiverId">Send to address:</label><br>
         <input type="text" id="receiverId" name="receiverId" value="" autofocus required><br>
+
         <label for="amount">Amount (LSK):</label><br>
-        <input type="number" id="amount" name="amount" value="" ><br>
+        <input type="number" id="amount" name="amount" value="" required><br>
+
         <label for="data">Data:</label><br>
         <input type="text" id="data" name="data" value=""><br>
+
         <label for="secret">Passphrase:</label><br>
-        <input type="password" id="secret" name="secret" value="" ><br>
+        <input type="password" id="secret" name="secret" value="" required><br>
+
         <label for="secondSecret">Second Passphrase:</label><br>
         <input type="password" id="secondSecret" name="secondSecret" value=""><br>
+
         <br>
+
         <button type="submit" id="createTransaction" onclick="startTransaction()">Create Transaction</button>
         <h2>Transaction:</h2>
         <p id="transaction"></p>
@@ -37,12 +43,17 @@
       <form class="" action="index.html" method="post"><br>
         <fieldset>
           <legend>Online Broadcast Transaction</legend>
+
           <label for="transationBody">Transaction JSON</label><br>
           <textarea id="transObject" name="transObject" rows="8" cols="80"></textarea><br>
+
           <br>
+
           Testnet<input type="radio" name="network" value="Testnet" Checked>
           Mainnet<input type="radio" name="network" value="Mainnet"><br>
+
           <br>
+
           <button type="button" name="broadcastTransaction" onclick="broadcastTrans()">Broadcast</button><br>
           <h2>Result:</h2><p id="transResult"></p>
         </fieldset>
@@ -50,7 +61,6 @@
       </form>
 
     </div>
-  <script src="bignumber.js"></script>
   <script src="lisk-elements.js"></script>
 
   <script>
